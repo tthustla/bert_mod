@@ -431,7 +431,7 @@ class TweetProcessor(DataProcessor):
             #     text_a = tokenization.convert_to_unicode(line[1])
             #     label = "0"
             # else:
-            text_a = tokenization.convert_to_unicode(pre_processing(line[-1]))
+            text_a = tokenization.convert_to_unicode(pre_processing(line[-1]).encode('utf8'))
             label = str(tokenization.convert_to_unicode(line[1]))
             examples.append(
                 InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
