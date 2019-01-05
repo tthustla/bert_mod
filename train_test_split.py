@@ -11,6 +11,7 @@ def main():
 	df = df.sample(frac=0.01).reset_index(drop=True)
 	label_map = {4: 1}
 	df = df.replace({"sentiment": label_map})
+	df['text'] = [x.encode('utf8') for x in df.text]
 	# set the random seed and split train and test with 99 to 1 ratio
 	np.random.seed(777)
 	msk = np.random.rand(len(df)) < 0.9

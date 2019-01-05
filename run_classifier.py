@@ -26,6 +26,7 @@ import optimization
 import tokenization
 import tensorflow as tf
 import re
+from nltk.tokenize import WordPunctTokenizer
 
 flags = tf.flags
 
@@ -419,7 +420,9 @@ class TweetProcessor(DataProcessor):
             third_process = second_process.lower()
             fourth_process = neg_pattern.sub(lambda x: negations_dic[x.group()], third_process)
             result = re.sub(r'[^A-Za-z ]','',fourth_process)
-            return result.strip()
+            words = [x for x  in tok.tokenize(result) if len(x) > 1]
+            return (" ".join(words)).strip()
+            # return result.strip()
 
         examples = []
         for (i, line) in enumerate(lines):
@@ -431,7 +434,7 @@ class TweetProcessor(DataProcessor):
             #     text_a = tokenization.convert_to_unicode(line[1])
             #     label = "0"
             # else:
-            text_a = tokenization.convert_to_unicode(pre_processing(line[-1]).encode('utf8'))
+            text_a = tokenization.convert_to_unicode(pre_processing(line[-1]))
             label = str(tokenization.convert_to_unicode(line[1]))
             examples.append(
                 InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
