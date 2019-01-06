@@ -8,13 +8,13 @@ def main():
 	# read training data with ISO-8859-1 encoding and column names set above
 	df = pd.read_csv('temp/training.1600000.processed.noemoticon.csv', encoding = 'ISO-8859-1',names=cols)
 	# shuffle the data
-	df = df.sample(frac=0.01).reset_index(drop=True)
+	df = df.sample(frac=1).reset_index(drop=True)
 	label_map = {4: 1}
 	df = df.replace({"sentiment": label_map})
 	df['text'] = [x.encode('utf8') for x in df.text]
 	# set the random seed and split train and test with 99 to 1 ratio
 	np.random.seed(777)
-	msk = np.random.rand(len(df)) < 0.9
+	msk = np.random.rand(len(df)) < 0.99
 	train = df[msk].reset_index(drop=True)
 	dev = df[~msk].reset_index(drop=True)
 	# save both train and test as CSV files
