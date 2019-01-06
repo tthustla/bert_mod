@@ -403,7 +403,7 @@ class TweetProcessor(DataProcessor):
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
-        tok = WordPunctTokenizer()
+        # tok = WordPunctTokenizer()
         def pre_processing(text):
             pat1 = r'@[A-Za-z0-9_]+'
             pat2 = r'https?://[^ ]+'
