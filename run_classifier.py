@@ -976,7 +976,7 @@ def main(_):
         file_based_convert_examples_to_features(
             eval_examples, label_list, FLAGS.max_seq_length, tokenizer, eval_file)
 
-        tf.logging.info("***** Running evaluation *****")
+        tf.logging.info("***** Running evaluation on dev set *****")
         tf.logging.info("  Num examples = %d", len(eval_examples))
         tf.logging.info("  Batch size = %d", FLAGS.eval_batch_size)
 
@@ -1004,6 +1004,41 @@ def main(_):
             for key in sorted(result.keys()):
                 tf.logging.info("  %s = %s", key, str(result[key]))
                 writer.write("%s = %s\n" % (key, str(result[key])))
+
+    if FLAGS.do_test:
+        test_examples = processor.get_test_examples(FLAGS.data_dir)
+        test_file = os.path.join(FLAGS.output_dir, "test.tf_record")
+        file_based_convert_examples_to_features(
+            test_examples, label_list, FLAGS.max_seq_length, tokenizer, test_file)
+
+        tf.logging.info("***** Running evaluation on test set *****")
+        tf.logging.info("  Num examples = %d", len(test_examples))
+        tf.logging.info("  Batch size = %d", FLAGS.eval_batch_size)
+
+        # This tells the estimator to run through the entire set.
+        eval_steps = None
+        # However, if running eval on the TPU, you will need to specify the
+        # number of steps.
+        if FLAGS.use_tpu:
+            # Eval will be slightly WRONG on the TPU because it will truncate
+            # the last batch.
+            eval_steps = int(len(test_examples) / FLAGS.eval_batch_size)
+
+        test_drop_remainder = True if FLAGS.use_tpu else False
+        test_input_fn = file_based_input_fn_builder(
+            input_file=test_file,
+            seq_length=FLAGS.max_seq_length,
+            is_training=False,
+            drop_remainder=test_drop_remainder)
+
+        test_result = estimator.evaluate(input_fn=test_input_fn, steps=eval_steps)
+
+        output_test_file = os.path.join(FLAGS.output_dir, "test_results.txt")
+        with tf.gfile.GFile(output_eval_file, "w") as writer:
+            tf.logging.info("***** Test results *****")
+            for key in sorted(result.keys()):
+                tf.logging.info("  %s = %s", key, str(test_result[key]))
+                writer.write("%s = %s\n" % (key, str(test_result[key])))
 
     if FLAGS.do_predict:
         predict_examples = processor.get_test_examples(FLAGS.data_dir)
