@@ -1037,7 +1037,7 @@ def main(_):
         test_result = estimator.evaluate(input_fn=test_input_fn, steps=eval_steps)
 
         output_test_file = os.path.join(FLAGS.output_dir, "test_results.txt")
-        with tf.gfile.GFile(output_eval_file, "w") as writer:
+        with tf.gfile.GFile(output_test_file, "w") as writer:
             tf.logging.info("***** Test results *****")
             for key in sorted(result.keys()):
                 tf.logging.info("  %s = %s", key, str(test_result[key]))
