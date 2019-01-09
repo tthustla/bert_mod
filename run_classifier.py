@@ -1039,7 +1039,7 @@ def main(_):
         output_test_file = os.path.join(FLAGS.output_dir, "test_results.txt")
         with tf.gfile.GFile(output_test_file, "w") as writer:
             tf.logging.info("***** Test results *****")
-            for key in sorted(result.keys()):
+            for key in sorted(test_result.keys()):
                 tf.logging.info("  %s = %s", key, str(test_result[key]))
                 writer.write("%s = %s\n" % (key, str(test_result[key])))
 
