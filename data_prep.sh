@@ -21,6 +21,6 @@ rm -rf temp
 # upload training_data and test_data created by train_test_split.py to Google Cloud Storage
 gsutil cp train.tsv gs://${PROJECT_ID}/bert/tweet_data/train.tsv
 gsutil cp dev.tsv gs://${PROJECT_ID}/bert/tweet_data/dev.tsv
-gsutil cp dev.tsv gs://${PROJECT_ID}/bert/tweet_data/test.tsv
+gsutil cp test.tsv gs://${PROJECT_ID}/bert/tweet_data/test.tsv
 # remove the training_data and test_data after uploading
 rm train.tsv dev.tsv test.tsv
